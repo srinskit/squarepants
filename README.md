@@ -1,0 +1,2 @@
+# squarepants
+Squarify an image
