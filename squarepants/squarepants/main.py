@@ -13,17 +13,20 @@ def main():
     img = cv2.imread(args.image, cv2.IMREAD_COLOR)
 
     h, w, _ = img.shape
-    pad, zoom, blur = 40, 1.65, 65
+    pad, sample_p, blur = 40, 90, 70
     sq_hw = max(h, w) + 2*pad
+
     final_h, final_w = sq_hw, sq_hw
-    sample_h, sample_w = int(final_h/zoom), int(final_w/zoom)
+    sample_h, sample_w = min(h, w), min(h, w)
+    sample_h, sample_w = int(sample_p*sample_h/100), int(sample_p*sample_w/100)
+
     k_size = blur*2+1
     assert k_size > 0, ":("
 
     res = img[h//2-sample_h//2: h//2-sample_h//2+sample_h,
               w//2-sample_w//2: w//2-sample_w//2+sample_w]
 
-    res = cv2.resize(res, None, fx=zoom, fy=zoom,
+    res = cv2.resize(res, (final_w, final_h),
                      interpolation=cv2.INTER_CUBIC)
 
     res = cv2.GaussianBlur(res, (k_size, k_size), 0)
